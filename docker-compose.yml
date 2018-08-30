@@ -1,0 +1,176 @@
+# Use postgres/example user/password credentials
+version: '3.4'
+
+services:
+    is18:
+        build: ./
+        #restart: always
+        stdin_open: true
+        tty: true
+        volumes:
+            - ./app:/app
+        ports:
+          - "8000:8000"
+        command: jupyter notebook --port=8000 --ip=0.0.0.0 --NotebookApp.token=''
+        
+#     m_scenarist: 
+#         #剧本(想定)设计者 主要解决"战前"如何有全部初始设定.
+#         #包含
+#         #  1"地图编辑"功能,读取shp，切出map 
+#         #  2"兵力编辑"功能 读取xlsx 创建oob,deploy,
+#         #restart: always
+#         stdin_open: true
+#         tty: true
+#         build: ./machines/scenarist
+#         volumes:
+#         - ./machines/scenarist/app:/deploy/app
+#         #战前,战中通用
+#         - ./common:/deploy/app/common 
+#         #战前
+#         - ./map_editor:/deploy/app/map_editor
+#         - ./force_editor:/deploy/app/force_editor
+#         #campaign
+#         - ./campaign:/deploy/app/campaign
+#         #输入
+#         - ./define:/deploy/app/define #1个游戏全局设定
+#         #输出
+#         - data:/db #保存输出到某个剧本
+#         #参谋(裁决) 创建zoc supply的时候还是要用到
+#         - ./staff:/deploy/app/staff
+#         - ./warplay:/deploy/app/warplay
+#         #- /home/xuqinghan/id_rsa.pub:/root/.ssh/authorized_keys
+#         ports:
+#         #- "80:80"
+#         - "2222:22"
+#         # depends_on:
+#         #     - myrabbit
+
+
+#     m_theater:
+#     #theater里每个warplay状态独立为一个env,
+#     #每个campaign暂时不拆分成独立服务:
+#     # 1 推演流程机制(回合/同步回合).
+#     # 2 battle裁决 以ECS方式实现每次推演的游戏运行时.
+#     # 3 逻辑时钟(用于记录dtm和battle的时序)
+#     # ------3者之间通过同步消息blinker实现
+
+#         build: ./machines/theater
+#         #image: kiev1941:latest
+#         volumes:
+            
+#             - ./machines/theater/app:/deploy/app
+#             #戏剧,播放
+#             - ./warplay:/deploy/app/warplay
+#             - ./force_editor:/deploy/app/force_editor
+#             #时间机制
+#             - ./wargame:/deploy/app/wargame
+#             #参谋(裁决)
+#             - ./staff:/deploy/app/staff
+#             #战前,战中通用
+#             - ./common:/deploy/app/common
+#             #输入
+#             - ./define:/deploy/app/define #1个游戏全局设定
+#             - data:/db
+#         ports:
+#         #- "80:80"
+#         - "2223:22"
+
+
+#     #     depends_on:
+#     #         - myrabbit
+#     #     command: python3 /deploy/app/suc_update.py
+
+
+#     # m1:
+#     #     #restart: always
+#     #     stdin_open: true
+#     #     tty: true
+#     #     build: ./machines/m1
+#     #     #image: kiev1941:latest
+#     #     volumes:
+#     #     - ./m2/app:/deploy/app
+#     #     #- /home/xuqinghan/id_rsa.pub:/root/.ssh/authorized_keys
+#     #     ports:
+#     #     #- "80:80"
+#     #     - "2222:22"
+#     #     # depends_on:
+#     #     #     - myrabbit
+#     #     #command: python3 /deploy/app/suc_update.py
+
+#     # m1_war_mechanism:
+#     #     #restart: always
+#     #     stdin_open: true
+#     #     tty: true
+#     #     build: ./m1
+#     #     #image: kiev1941:latest
+#     #     volumes:
+#     #         - ./m1/app:/deploy/app
+#     #         # - /home/xuqinghan/id_rsa.pub:/root/.ssh/authorized_keys
+#     #         - data:/db
+#     #     ports:
+#     #     #- "80:80"
+#     #     - "2221:22"
+
+
+
+#     # svg: #用来辅助生成svg用来测试
+#     #     #restart: always
+#     #     stdin_open: true
+#     #     tty: true
+#     #     build: ./svg-maker/
+#     #     #image: kiev1941:latest
+#     #     volumes:
+#     #     - ./svg-maker/app:/deploy/app
+#     #     - ./svg-maker/app/node_modules:/deploy/app/node_modules
+#     #     ports:
+#     #       - "3000:3000"
+#     #     command: npm run build
+
+# volumes:
+#     data:
+#       driver_opts:
+#         type: none
+#         device: /home/xuqinghan/dev/kiev1941/backend/db
+#         o: bind
+#     # common:
+#     #   driver_opts:
+#     #     type: none
+#     #     #device: ./common
+#     #     device: /home/xuqinghan/dev/kiev1941/backend/common
+        
+#     #     o: bind
+
+# # docker volume create kiev1941
+
+
+#     # db:
+#     #     image: postgres
+#     #     restart: always
+#     #     environment:
+#     #         POSTGRES_PASSWORD: example
+#     #     volumes:
+#     #         - /home/db/postgres:/var/lib/postgresql/data
+
+#     # adminer:
+#     #     image: adminer
+#     #     restart: always
+#     #     ports:
+#     #         - 8080:8080
+#     # zoo:
+#     #     image: zookeeper
+#     #     restart: always
+#     #     hostname: zookeeper
+#     #     volumes:
+#     #     #- zookeeper/conf:/conf
+#     #     - ./zookeeper/data:/data
+#     #     - ./zookeeper/datalog:/datalog
+
+#     # kafka:
+#     #     build: kafka/
+#     #     restart: always
+#     #     volumes:
+#     #     - ./kafka/config:/kafka/config
+#     #     ports:
+#     #     - "9092:9092"
+#     #     depends_on:
+#     #    - zoo

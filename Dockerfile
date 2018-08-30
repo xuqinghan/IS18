@@ -1,7 +1,9 @@
 # docker for the MVA course
 
 FROM ubuntu:xenial
-MAINTAINER Gabriele Facciolo <gfacciol@gmail.com>
+LABEL author="Gabriele Facciolo <gfacciol@gmail.com> xuqinghan@gmail.com"
+LABEL purpose = 'is18'
+
 RUN apt-get update && apt-get install -y software-properties-common
 RUN apt-add-repository -y ppa:ubuntugis/ppa
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -44,7 +46,7 @@ RUN apt update && apt install -y libsm6 libxext6
 # CREATE USER 
 ENV NB_USER jovyan
 ENV NB_UID 1000
-ENV HOME /home/${NB_USER}
+#ENV HOME /home/${NB_USER}
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -53,16 +55,18 @@ RUN adduser --disabled-password \
 
 
 # Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
+#COPY . ${HOME}
 USER root
-RUN chown -R ${NB_UID} ${HOME}
+#RUN chown -R ${NB_UID} ${HOME}
 
 
 RUN pip3 install -U pip
 
+RUN mkdir -p /app
 
+COPY ./app/requirements.txt /app/requirements.txt
 # install requirements
-RUN pip3 install -r ${HOME}/requirements.txt
+RUN pip3 install -r /app/requirements.txt
 
 
 
@@ -96,14 +100,16 @@ RUN pip3 install notebook==5.4.1
 
 
 # compile SRTM
-RUN cd ${HOME}/srtm4 && make
+
+COPY ./srtm4 /srtm4
+RUN cd /srtm4 && make
 
 # compile potreeconverter
 RUN cd /home/ && git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain.git && cd /home/PotreeConverter_PLY_toolchain && git submodule update --init --recursive && CC=gcc-7 CXX=g++-7 make && cp -r /home/PotreeConverter_PLY_toolchain/PotreeConverter/PotreeConverter/resources /home/PotreeConverter_PLY_toolchain/PotreeConverter/build/PotreeConverter/
 
 # switch to user
 USER ${NB_USER}
-WORKDIR $HOME
+WORKDIR /app
 
 # create a user, since we don't want to run as root
 EXPOSE 8000:8000

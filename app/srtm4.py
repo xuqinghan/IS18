@@ -117,8 +117,9 @@ def srtm4(lon, lat):
         height(s) in meters above the WGS84 ellipsoid (not the EGM96 geoid)
     """
     # determine the needed srtm tiles by running the srtm4_which_tile binary
-    here = os.path.dirname(__file__)
-    p = subprocess.Popen(['%s/srtm4/srtm4_which_tile'%here],
+    #here = os.path.dirname(__file__)
+    p = subprocess.Popen(#['%s/srtm4/srtm4_which_tile'%here],
+    ['/srtm4/srtm4_which_tile'],
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
                          env={'PATH': BIN, 'SRTM4_CACHE': SRTM_DIR})
@@ -138,7 +139,8 @@ def srtm4(lon, lat):
         get_srtm_tile(srtm_tile, SRTM_DIR)
 
     # run the srtm4 binary and feed it from stdin
-    p = subprocess.Popen(['%s/srtm4/srtm4'%here],
+    p = subprocess.Popen(#['%s/srtm4/srtm4'%here],
+                        ['/srtm4/srtm4'],
                          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                          env={'PATH': BIN, 'SRTM4_CACHE': SRTM_DIR})
     outs, errs = p.communicate(input=lon_lats.encode())
