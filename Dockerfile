@@ -105,7 +105,10 @@ COPY ./srtm4 /srtm4
 RUN cd /srtm4 && make
 
 # compile potreeconverter
-RUN cd /home/ && git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain.git && cd /home/PotreeConverter_PLY_toolchain && git submodule update --init --recursive && CC=gcc-7 CXX=g++-7 make && cp -r /home/PotreeConverter_PLY_toolchain/PotreeConverter/PotreeConverter/resources /home/PotreeConverter_PLY_toolchain/PotreeConverter/build/PotreeConverter/
+RUN cd /home/ && git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain.git &&\
+cd /home/PotreeConverter_PLY_toolchain && git submodule update --init --recursive && \
+CC=gcc-7 CXX=g++-7 make && \
+cp -r /home/PotreeConverter_PLY_toolchain/PotreeConverter/PotreeConverter/resources /home/PotreeConverter_PLY_toolchain/PotreeConverter/build/PotreeConverter/
 
 # switch to user
 USER ${NB_USER}
@@ -114,6 +117,7 @@ WORKDIR /app
 # create a user, since we don't want to run as root
 EXPOSE 8000:8000
 #EXPOSE 8008:8008
+RUN apt install -q -y openssh-server
 
 #
 #CMD ["jupyterhub-singleuser"]

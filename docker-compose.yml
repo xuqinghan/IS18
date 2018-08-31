@@ -11,8 +11,10 @@ services:
             - ./app:/app
         ports:
           - "8000:8000"
-        command: jupyter notebook --port=8000 --ip=0.0.0.0 --NotebookApp.token=''
-        
+        # command: jupyter notebook --port=8000 --ip=0.0.0.0 --NotebookApp.token=''
+        command: usr/sbin/sshd -d
+
+
 #     m_scenarist: 
 #         #剧本(想定)设计者 主要解决"战前"如何有全部初始设定.
 #         #包含
